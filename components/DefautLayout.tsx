@@ -7,6 +7,8 @@ import { useRouter } from "next/router";
 import { useSession, signIn, signOut } from "next-auth/react";
 import nProgress from "nprogress";
 import LightModeButton from "./LightModeButton";
+import { useAtom } from "jotai";
+import lightModeAtom from "@/data/LightMode";
 
 const { Content, Sider } = Layout;
 
@@ -120,6 +122,8 @@ const DefaultLayout: React.FC<{
 
     const displayUserName = session?.user?.name;
 
+    const [lightMode] = useAtom(lightModeAtom);
+
     function renderAvatar() {
         if (status === 'authenticated') {
             return (
@@ -147,14 +151,14 @@ const DefaultLayout: React.FC<{
                 }
             }
         }}>
-            <Layout className="min-h-screen">
+            <Layout className="min-h-screen" rootClassName={lightMode ? '' : 'dark'}>
                 <Head>
                     <meta key="meta-charset" charSet="utf-8" />
                     <meta key="meta-viewport" name="viewport" content="width=device-width, initial-scale=1" />
                     <link key="favicon" rel="icon" href="/favicon.ico" />
                 </Head>
 
-                <Sider width={240} className="pb-24 hidden lg:block">
+                <Sider width={240} className="pb-24 hidden lg:block dark:bg-slate-500">
                     <div className="h-12 p-2 m-4 text-white bg-slate-600">Logo</div>
                     {renderAvatar()}
                     <ConfigProvider theme={{
@@ -199,7 +203,7 @@ const DefaultLayout: React.FC<{
                         </div>
                         <div></div>
                     </div>
-                    <Content className="m-5 p-8 bg-white">
+                    <Content className="m-5 p-8 bg-white dark:bg-slate-800 dark:text-white">
                         {children}
                     </Content>
                 </Layout>
